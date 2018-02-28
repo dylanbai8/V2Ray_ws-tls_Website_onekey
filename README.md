@@ -15,7 +15,7 @@ bash <(curl https://raw.githubusercontent.com/dylanbai8/V2Ray_ws-tls_Website_one
 ```
 修改内容如下：
 1.修改路径分流为 HTTP Header 分流（随机生成Header）；
-2.增加 Website 伪装站点；
+2.增加 Website 伪装站点。https://你的域名，（注意是https）；
 3.增加 Rinetd BBR 端口加速（支持OpenVZ）；
 4.自动清除残余的 Http 服务（某些系统自带的 Apache2 以及重装脚本时需要清除的 Nginx ）；
 5.每天凌晨自动升级 V2ray 最新内核。
