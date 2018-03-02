@@ -1,5 +1,5 @@
 # V2RAY 基于 NGINX 的 VMESS+WS+TLS+Website(Use Host) 
-### HTTP Header 分流，随机生成Header，自带 Website，自带 Rinetd BBR 加速，支持OpenVZ，自动生成客户端 config.json 配置文件，重装自动清除残余的 Http 服务，每天自动升级最新的 V2ray 内核。
+### HTTP Header 分流，随机生成Header，自带 Website 80 端口强制跳转 https，自带 Rinetd BBR 加速，支持OpenVZ，自动生成客户端 config.json 配置文件，重装自动清除残余的 Http 服务，每天自动升级最新的 V2ray 内核。
 
 使用：1.解析好域名； 2.运行一键安装脚本；
 ```
