@@ -1,0 +1,98 @@
+
+
+sed -i "s/share_address/${domain}/g" "/www/${ConfigPath}/index.html"
+sed -i "s/share_port/${port}/g" "/www/${ConfigPath}/index.html"
+sed -i "s/share_uuid/${UUID}/g" "/www/${ConfigPath}/index.html"
+sed -i "s/share_alterId/${alterID}/g" "/www/${ConfigPath}/index.html"
+sed -i "s/share_host/www.${camouflage}.com/g" "/www/${ConfigPath}/index.html"
+sed -i "s/host_v2rayNG/\/;www.${camouflage}.com/g" "/www/${ConfigPath}/index.html"
+sed -i "s/v2ray_domain/https://${domain}/g" "/www/${ConfigPath}/index.html"
+sed -i "s/share_json/https://${domain}/${camouflage2}/config.json/g" "/www/${ConfigPath}/index.html"
+
+
+
+
+适度游戏益脑,过度游戏伤身!合理安排时间,请您科学上网。
+
+
+
+### 定时更改UUID
+change_uuid_add(){
+    touch /root/v2ray/change_uuid.sh
+    cat>/root/v2ray/change_uuid.sh<<EOF
+#!/bin/bash
+Font="\033[0m"
+Green="\033[32m"
+GreenBG="\033[42;37m"
+OK="\${Green}[OK]\${Font}"
+ConfigPath="${camouflage2}"
+ShareWebsite="${domain}"
+camouflage3=`cat /dev/urandom | head -n 10 | md5sum | head -c 8`
+UUID2=\$(cat /proc/sys/kernel/random/uuid)
+rm -rf /www/s
+mkdir /www/s
+cp -rp /www/${ConfigPath} /www/s
+mv /www/s/${ConfigPath} /www/s/${camouflage3}
+sed -i "/\"id\"/c \\\t  \"id\":\"\${UUID2}\"," /etc/v2ray/config.json
+sed -i "/\"id\"/c \\\t  \"id\":\"\${UUID2}\"," /www/\${camouflage3}/config.json
+sed -i "/\"id\"/c \\\t  \"id\":\"\${UUID2}\"," /www/\${camouflage3}/index.html
+echo -e "\${OK} \${GreenBG} 更新成功，新的UUID为：\${UUID} \${Font}"
+echo -e "\${OK} \${GreenBG} 您的 V2ray 账号分享地址为 \${ShareWebsite} 暗号：科学上网 \${Font}"
+EOF
+}
+
+
+
+
+### 添加 V2ray 账号分享
+share_add(){
+    touch /root/v2ray/share.sh
+    cat>/root/v2ray/share.sh<<EOF
+#!/bin/bash
+Font="\033[0m"
+Green="\033[32m"
+GreenBG="\033[42;37m"
+OK="\${Green}[OK]\${Font}"
+ConfigPath="${camouflage2}"
+echo -e "${OK} ${GreenBG} 正在安装 V2ray Website 分享页 ${Font}"
+sleep 2
+wget https://github.com/dylanbai8/V2Ray_ws-tls_Website_onekey/raw/master/V2rayShare.tar.gz
+tar -zxvf V2rayWebsite.tar.gz -C /www/${ConfigPath}
+rm -f V2rayShare.tar.gz
+echo -e "\${OK} \${GreenBG} 正在配置定时更换UUID任务（每周一） \${Font}"
+sleep 2
+crontab -l >> crontab.txt
+echo "10 12 * * 1 bash /root/v2ray/share.sh" >> crontab.txt
+crontab crontab.txt
+sleep 2
+/etc/init.d/cron restart
+rm -f crontab.txt
+mv /www/index.html /www/index.bak
+mv /www/share.html /www/index.html
+echo -e "${OK} ${GreenBG} 账号分享功能已开启 正在执行首次UUID更换任务 ${Font}"
+rm -f /root/v2ray/share.sh
+bash /root/v2ray/change_uuid
+EOF
+}
+
+
+
+### 绑定导流博客
+blog_add(){
+#!/bin/bash
+Font="\033[0m"
+Green="\033[32m"
+GreenBG="\033[42;37m"
+OK="\${Green}[OK]\${Font}"
+ConfigPath="${camouflage2}"
+ShareWebsite="${domain}"
+stty erase '^H' && read -p "请输入你的域名信息(eg:www.blog.com):" blogdomain
+mv /www/index.html /www/index.bak2
+cp -rp /www/blog.html /www/index.html
+sed -i "s/www.blog.com/${blogdomain}/g" "/www/index.html"
+echo -e "${OK} ${GreenBG} 绑定成功 您的博客地址为：${blogdomain} ${Font}"
+echo -e "${OK} ${GreenBG} 您的 V2ray 分享地址为：${ShareWebsite} 请将该链接添加至您的博客首页导航栏 ${Font}"
+echo -e "${OK} ${GreenBG} 注意：${ShareWebsite} 必须经由您的博客跳转才能访问 ${Font}"
+}
+
+
