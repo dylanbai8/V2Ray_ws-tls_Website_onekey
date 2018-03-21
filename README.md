@@ -1,5 +1,5 @@
 # V2RAY 基于 NGINX 的 VMESS+WS+TLS+Website(Use Host) 
-### HTTP Header 分流 随机生成Header，自带 Website 伪装站点 http 强制跳转 https，自带 Rinetd BBR 加速 支持OpenVZ，自动生成客户端 config.json 配置文件 web在线下载，重装自动清除残余的 Http 服务，每天自动升级最新的 V2ray 内核，支持cdn嵌套，支持ssl非443端口
+### HTTP Header 分流 随机生成Header，自带 Website 伪装站点 http 强制跳转 https，自带 Rinetd BBR 加速 支持OpenVZ，自动生成客户端 config.json 配置文件 web在线下载，重装自动清除残余的 Http 服务，每天自动升级最新的 V2ray 内核，支持cdn嵌套，支持ssl非443端口。
 
 使用：1.解析好域名； 2.运行一键安装脚本；
 ```
@@ -59,7 +59,6 @@ http://www.freenom.com
 6.增加 自动生成客户端 config.json 配置文件（Website 随机路径 在线下载，支持 v2rayNG 从 url 导入）。
 7.增加 一键删除客户端 config.json 配置文件，防止 Website 被抓取。
 8.增加 一键更换新的 UUID。
-
+9.增加 客户端 Kitsunebi ShadowRay v2rayNG BifrostV 的 http header 分流配置提示。
 ```
 ### 其它与原版一致，详细说明请步移 https://github.com/wulabing/V2Ray_ws-tls_bash_onekey
-
