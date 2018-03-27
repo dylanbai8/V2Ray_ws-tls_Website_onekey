@@ -1,5 +1,5 @@
 # V2RAY 基于 NGINX 的 VMESS+WS+TLS+Website(Use Host) 
-### HTTP Header 分流 随机生成 Header，自带 Website 伪装站点 http 强制跳转 https，支持 ssl 非443端口，自带 Rinetd BBR 加速 支持 OpenVZ，自动生成客户端 config.json 配置文件 web 在线下载，重装自动清除残余的 Http 服务，每天自动升级最新的 V2ray 内核，支持cdn嵌套，自动续签 ssl 证书。
+### HTTP Header分流 随机生成Header，自带Website伪装站点 http强制跳转https，支持ssl非443端口，自带Rinetd BBR加速 支持OpenVZ，自动生成客户端config.json配置文件 web在线下载，重装自动清除残余的Http服务，每天自动升级最新的V2ray内核，支持cdn嵌套，自动续签ssl证书。
 
 使用：1.解析好域名； 2.运行一键安装脚本；
 ```
@@ -21,7 +21,8 @@ bash v.sh -r
 ```
 bash v.sh -s
 
-开启共享模式后，每周一自动更换 UUID 并推送至 Website伪装站点首页。为防止被恶意抓取，该模式下不提供客户端 config.json 文件下载。
+开启共享模式后，每周一自动更换 UUID 并推送至 Website伪装站点首页。
+为防止被恶意抓取，该模式下不提供客户端 config.json 文件下载。
 ```
 
 注册免费域名
