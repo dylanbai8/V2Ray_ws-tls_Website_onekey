@@ -1,20 +1,27 @@
 # V2RAY 基于 NGINX 的 VMESS+WS+TLS+Website(Use Host) 
-### HTTP Header 分流 随机生成Header，自带 Website 伪装站点 http 强制跳转 https，支持ssl非443端口，自带 Rinetd BBR 加速 支持OpenVZ，自动生成客户端 config.json 配置文件 web在线下载，重装自动清除残余的 Http 服务，每天自动升级最新的 V2ray 内核，支持cdn嵌套。
+### HTTP Header 分流 随机生成 Header，自带 Website 伪装站点 http 强制跳转 https，支持 ssl 非443端口，自带 Rinetd BBR 加速 支持 OpenVZ，自动生成客户端 config.json 配置文件 web 在线下载，重装自动清除残余的 Http 服务，每天自动升级最新的 V2ray 内核，支持cdn嵌套，自动续签 ssl 证书。
 
 使用：1.解析好域名； 2.运行一键安装脚本；
 ```
 wget https://raw.githubusercontent.com/dylanbai8/V2Ray_ws-tls_Website_onekey/master/v.sh && bash v.sh
 ```
-[请使用 Debian8 纯净系统安装]
+[新手请使用 Debian8 纯净系统安装]
 
 备用1：一键更换新的 UUID
 ```
 bash v.sh -n
 ```
 
-备用2：一键删除客户端 config.json 配置文件，防止 Website 被抓取。
+备用2：一键删除服务器中储存的客户端 config.json 配置文件，防止 Website 被抓取。
 ```
 bash v.sh -r
+```
+
+共享你的 V2ray 账号
+```
+bash v.sh -s
+
+开启共享模式后，每周一自动更换 UUID 并推送至 Website伪装站点首页。为防止被恶意抓取，该模式下不提供客户端 config.json 文件下载。
 ```
 
 注册免费域名
@@ -40,9 +47,10 @@ http://www.freenom.com
 2.开启cdn隐藏ip地址
 返回 Status 点击灰色云朵图标 将其变成 橙色云朵状态 开启cdn，即是 DNS and HTTP proxy(CDN)
 
-3.开启 Always use HTTPS
-开启http强制https跳转
+其它配置项尽量保持默认，这样有助于你排错。
 ```
+
+提示：重装系统（Debian 8）能解决 100% 的安装错误，HTTP header 分流客户端配置容易出错认真检查配置信息。
 
 ### 申明：
 
@@ -60,5 +68,7 @@ http://www.freenom.com
 7.增加 一键删除客户端 config.json 配置文件，防止 Website 被抓取；
 8.增加 一键更换新的 UUID；
 9.增加 客户端 Kitsunebi ShadowRay v2rayNG BifrostV 的 http header 分流配置提示。
+10.增加 V2ray 账号共享功能。
+11.增加 脚本重装判断 自动跳过 ssl 重复申请。
 ```
 ### 其它与原版一致，详细说明请步移 https://github.com/wulabing/V2Ray_ws-tls_bash_onekey
