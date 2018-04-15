@@ -64,35 +64,25 @@ check_system(){
 		echo -e "${OK} ${GreenBG} SElinux 设置中，请耐心等待，不要进行其他操作${Font} "
 		setsebool -P httpd_can_network_connect 1 >/dev/null 2>&1
 		echo -e "${OK} ${GreenBG} SElinux 设置完成 ${Font} "
-		## 添加 Nginx apt源
-		cat>/etc/yum.repos.d/nginx.repo<<EOF
-[nginx]
-name=nginx repo
-baseurl=http://nginx.org/packages/mainline/centos/7/\$basearch/
-gpgcheck=0
-enabled=1
-EOF
-		echo -e "${OK} ${GreenBG} Nginx 源 安装完成 ${Font}"
+		## 添加 Nginx yum源
+		yum -y install epel-release >/dev/null 2>&1
+		echo -e "${OK} ${GreenBG} epel 源 安装完成 ${Font}"
 	elif [[ "${ID}" == "debian" && ${VERSION_ID} -ge 8 ]];then
 		echo -e "${OK} ${GreenBG} 当前系统为 Debian ${VERSION_ID} ${VERSION} ${Font} "
 		INS="apt"
 		## 添加 Nginx apt源
-		if [ ! -f nginx_signing.key ];then
-		echo "deb http://nginx.org/packages/mainline/debian/ ${VERSION} nginx" >> /etc/apt/sources.list
-		echo "deb-src http://nginx.org/packages/mainline/debian/ ${VERSION} nginx" >> /etc/apt/sources.list
+		echo "deb http://nginx.org/packages/debian/ ${VERSION} nginx" >> /etc/apt/sources.list
+		echo "deb-src http://nginx.org/packages/debian/ ${VERSION} nginx" >> /etc/apt/sources.list
 		wget -nc https://nginx.org/keys/nginx_signing.key >/dev/null 2>&1
 		apt-key add nginx_signing.key >/dev/null 2>&1
-		fi
 	elif [[ "${ID}" == "ubuntu" && `echo "${VERSION_ID}" | cut -d '.' -f1` -ge 16 ]];then
-		echo -e "${OK} ${GreenBG} 当前系统为 Ubuntu ${VERSION_ID} ${VERSION_CODENAME} ${Font} "
+		echo -e "${OK} ${GreenBG} 当前系统为 Ubuntu ${VERSION_ID} ${VERSION} ${Font} "
 		INS="apt"
 		## 添加 Nginx apt源
-		if [ ! -f nginx_signing.key ];then
-		echo "deb http://nginx.org/packages/mainline/ubuntu/ ${VERSION_CODENAME} nginx" >> /etc/apt/sources.list
-		echo "deb-src http://nginx.org/packages/mainline/ubuntu/ ${VERSION_CODENAME} nginx" >> /etc/apt/sources.list
+		echo "deb http://nginx.org/packages/debian/ ${VERSION} nginx" >> /etc/apt/sources.list
+		echo "deb-src http://nginx.org/packages/debian/ ${VERSION} nginx" >> /etc/apt/sources.list
 		wget -nc https://nginx.org/keys/nginx_signing.key >/dev/null 2>&1
 		apt-key add nginx_signing.key >/dev/null 2>&1
-		fi
 	else
 		echo -e "${Error} ${RedBG} 当前系统为 ${ID} ${VERSION_ID} 不在支持的系统列表内，安装中断 ${Font} "
 		exit 1
@@ -122,13 +112,13 @@ port_alterid_set(){
 	stty erase '^H' && read -p "请输入：" alterID
 	[[ -z ${alterID} ]] && alterID="64"
 	echo -e "----------------------------------------------------------"
-	echo -e "${Info} ${GreenBG} 你输入的配置信息为 域名：${domain} 端口：${port} alterID：${alterID} ${Font}"
+	echo -e "${Info} ${GreenBG} 你输入的配置信息为 域名：${domain} 端口：${port} alterID：${alterID} 即将开始安装请稍后 …… ${Font}"
 	echo -e "----------------------------------------------------------"
 }
 
 #强制清除可能残余的http服务 v2ray服务 关闭防火墙 更新源
 apache_uninstall(){
-	echo -e "${Info} ${GreenBG} 正在强制清理可能残余的http服务 ${Font}"
+	echo -e "${Info} ${GreenBG} 正在强制清理可能残余的http服务 …… ${Font}"
 	if [[ "${ID}" == "centos" ]];then
 
 	systemctl disable httpd >/dev/null 2>&1
@@ -177,7 +167,7 @@ apache_uninstall(){
 
 #安装各种依赖工具
 dependency_install(){
-	${INS} install curl lsof -y
+	${INS} install wget curl lsof -y
 
 	if [[ "${ID}" == "centos" ]];then
 		${INS} -y install crontabs
@@ -188,6 +178,9 @@ dependency_install(){
 
 	${INS} install bc -y
 	judge "安装 bc"
+
+	${INS} install unzip -y
+	judge "安装 unzip"
 }
 
 #检测域名解析是否正确
@@ -348,7 +341,7 @@ v2ray_conf_add(){
 {
   "inbound": {
 	"port": 10000,
-	"listen": "127.0.0.1",
+	"listen":"127.0.0.1",
 	"protocol": "vmess",
 	"settings": {
 	  "clients": [
@@ -358,8 +351,8 @@ v2ray_conf_add(){
 		}
 	  ]
 	},
-	"streamSettings": {
-	  "network": "ws",
+	"streamSettings":{
+	  "network":"ws",
 	  "wsSettings": {
 	  "path": "/",
 	  "headers": {
@@ -384,10 +377,10 @@ nginx_conf_add(){
 	touch ${nginx_conf_dir}/v2ray.conf
 	cat>${nginx_conf_dir}/v2ray.conf<<EOF
 	server {
-		listen 443 ssl http2;
+		listen 443 ssl;
 		ssl_certificate		/etc/v2ray/v2ray.crt;
 		ssl_certificate_key	/etc/v2ray/v2ray.key;
-		ssl_protocols		TLSv1 TLSv1.1 TLSv1.2 TLSv1.3;
+		ssl_protocols		TLSv1 TLSv1.1 TLSv1.2;
 		ssl_ciphers			HIGH:!aNULL:!MD5;
 		server_name			serveraddr.com;
 		root		/www;
@@ -443,7 +436,7 @@ user_config_add(){
 			"vnext": [{
 				"users": [{
 					"alterId": SETAID,
-					"security": "none",
+					"security": "aes-128-gcm",
 					"id": "SETID"
 				}],
 				"port": SETPORT,
@@ -482,7 +475,6 @@ user_config_add(){
 			"auth": "noauth"
 		},
 		"protocol": "socks",
-		"domainOverride": ["tls","http"],
 		"port": 1080,
 		"listen": "0.0.0.0"
 	},
@@ -528,8 +520,7 @@ user_config_add(){
 	"dns": {
 		"servers": [
 			"8.8.8.8",
-			"1.1.1.1",
-			"119.29.29.29"
+			"8.8.4.4"
 		]
 	}
 }
@@ -649,7 +640,7 @@ show_information(){
 	echo -e "${Green} 端口（port）：${Font} ${port} "
 	echo -e "${Green} 用户id（UUID）：${Font} ${UUID} "
 	echo -e "${Green} 额外id（alterId）：${Font} ${alterID} "
-	echo -e "${Green} 加密方式（security）：${Font} 自适应（建议 none） "
+	echo -e "${Green} 加密方式（security）：${Font} 自适应 或 auto "
 	echo -e "${Green} 传输协议（network）：${Font} 选 ws 或 websocket "
 	echo -e "${Green} 伪装类型（type）：${Font} none "
 	echo -e "${Green} WS 路径（Path）（WebSocket 路径）：${Font} / "
@@ -657,7 +648,7 @@ show_information(){
 	echo -e "${Green} 伪装域名（适用于 v2rayNG）：${Font} /;www.${hostheader}.com "
 	echo -e "${Green} HTTP头（适用于 BifrostV）：${Font} 字段名：host 值：www.${hostheader}.com "
 	echo -e "${Green} Mux 多路复用：${Font} 自适应 "
-	echo -e "${Green} 底层传输安全（加密方式）：${Font} tls "
+	echo -e "${Green} 底层传输安全：${Font} tls "
 	if [ "${port}" -eq "443" ];then
 	echo -e "${Green} Website 伪装站点：${Font} https://${domain} "
 	echo -e "${Green} 客户端配置文件下载地址（URL）：${Font} https://${domain}/s/${camouflage}/config.json ${Green} 【推荐】 ${Font} "
