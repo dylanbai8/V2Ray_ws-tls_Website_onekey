@@ -71,6 +71,7 @@ http://www.freenom.com
 9.增加 客户端 Kitsunebi ShadowRay v2rayNG BifrostV 的 http header 分流配置提示。
 10.增加 V2ray 账号共享功能。
 11.增加 脚本重装判断 自动跳过 ssl 重复申请。
-12.尝试解决断流问题。
+12.解决部分设备上偶尔的断流问题（客户端导入 config.json文件）
+13.增加 v2ray-core-windows 便捷启动脚本，一键添加开机自启动服务。
 ```
 ### 其它与原版一致，详细说明请步移 https://github.com/wulabing/V2Ray_ws-tls_bash_onekey
