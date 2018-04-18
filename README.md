@@ -1,5 +1,5 @@
 # V2RAY 基于 NGINX 的 VMESS+WS+TLS+Website(Use Host) 
-### HTTP Header 分流 随机生成 Header，自带 Website 伪装站点 http 强制跳转 https，支持ssl非443端口，自带Rinetd BBR加速 支持OpenVZ，自动生成客户端config.json配置文件 web在线下载，重装自动清除残余的Http服务，每天自动升级最新的V2ray内核，支持cdn嵌套，自动续签ssl证书。
+### HTTP Header 分流 随机生成 Header，自带 Website 伪装站点 http 强制跳转 https，支持ssl非443端口，自带Rinetd BBR加速 支持OpenVZ，自动生成客户端config.json配置文件 web在线下载，重装自动清除残余的Http服务，每天自动升级最新的V2ray内核，支持cdn嵌套，自动续签ssl证书，自动生成Windows客户端和便捷启动脚本 一键添加开机自启动服务 一键开启系统ie代理。
 
 使用：1.解析好域名； 2.运行一键安装脚本；
 ```
@@ -7,19 +7,19 @@ wget -N git.io/v.sh && chmod +x v.sh && bash v.sh
 ```
 [新手请使用 Debian8 纯净系统安装]
 
-备用1：一键更换新的 UUID
+备用1：一键更换新的 UUID （new）
 ```
-bash v.sh -n
-```
-
-备用2：一键删除服务器中储存的客户端 config.json 配置文件，防止 Website 被抓取。
-```
-bash v.sh -r
+v -n
 ```
 
-共享你的 V2ray 账号
+备用2：一键删除服务器中储存的客户端 config.json 配置文件，防止 Website 被抓取 （rm）
 ```
-bash v.sh -s
+v -r
+```
+
+共享你的 V2ray 账号 （share）
+```
+v -s
 
 开启共享模式后，每周一自动更换 UUID 并推送至 Website 伪装站点首页。
 为防止被恶意抓取，该模式下不提供客户端 config.json 文件下载。
@@ -72,6 +72,6 @@ http://www.freenom.com
 10.增加 V2ray 账号共享功能。
 11.增加 脚本重装判断 自动跳过 ssl 重复申请。
 12.解决部分设备上偶尔的断流问题（客户端导入 config.json文件）
-13.增加 v2ray-core-windows 便捷启动脚本，一键添加开机自启动服务。
+13.增加 自动生成 v2ray-core-windows 客户端和便捷启动脚本，一键添加开机自启动服务，一键开启系统ie代理。
 ```
 ### 其它与原版一致，详细说明请步移 https://github.com/wulabing/V2Ray_ws-tls_bash_onekey
