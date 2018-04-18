@@ -9,17 +9,17 @@ wget -N git.io/v.sh && chmod +x v.sh && bash v.sh
 
 备用1：一键更换新的 UUID （new）
 ```
-v -n
+bash v.sh -n
 ```
 
 备用2：一键删除服务器中储存的客户端 config.json 配置文件，防止 Website 被抓取 （rm）
 ```
-v -r
+bash v.sh -r
 ```
 
 共享你的 V2ray 账号 （share）
 ```
-v -s
+bash v.sh -s
 
 开启共享模式后，每周一自动更换 UUID 并推送至 Website 伪装站点首页。
 为防止被恶意抓取，该模式下不提供客户端 config.json 文件下载。
