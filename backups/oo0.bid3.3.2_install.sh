@@ -419,44 +419,83 @@ user_config_add(){
 	touch ${v2ray_conf_dir}/user.json
 	cat>${v2ray_conf_dir}/user.json<<EOF
 {
+	"log": {
+		"loglevel": "info",
+		"access": "",
+		"error": ""
+	},
+	"dns": {
+		"servers": [
+			"8.8.8.8",
+			"1.1.1.1",
+			"119.29.29.29",
+			"114.114.114.114"
+		]
+	},
+	"inbound": {
+		"port": 1080,
+		"listen": "0.0.0.0",
+		"protocol": "socks",
+		"domainOverride": [
+			"tls",
+			"http"
+		],
+		"settings": {
+			"ip": "127.0.0.1",
+			"udp": true,
+			"auth": "noauth",
+			"timeout": 600
+		}
+	},
+	"inboundDetour": {
+		"port": 1080,
+		"listen": "0.0.0.0",
+		"protocol": "http",
+		"domainOverride": [
+			"tls",
+			"http"
+		],
+		"settings": {
+			"ip": "127.0.0.1",
+			"udp": true,
+			"auth": "noauth",
+			"timeout": 600
+		}
+	},
 	"outbound": {
-		"streamSettings": {
-			"network": "ws",
-			"kcpSettings": null,
-			"wsSettings": {
-				"headers": {
-					"host": "SETPATH"
-				},
-				"path": "/"
-			},
-			"tcpSettings": null,
-			"tlsSettings": {},
-			"security": "tls"
-		},
 		"tag": "agentout",
 		"protocol": "vmess",
 		"mux": {
 			"enabled": true,
-			"concurrency": 8
+			"concurrency": 6
+		},
+		"streamSettings": {
+			"network": "ws",
+			"security": "tls",
+			"wsSettings": {
+				"path": "/",
+				"headers": {
+					"host": "SETPATH"
+				}
+			}
 		},
 		"settings": {
-			"vnext": [{
-				"users": [{
-					"alterId": SETAID,
-					"security": "none",
-					"id": "SETID"
-				}],
-				"port": SETPORT,
-				"address": "SETDOMAIN"
-			}]
+			"vnext": [
+				{
+					"port": SETPORT,
+					"address": "SETDOMAIN",
+					"users": [
+						{
+							"alterId": SETAID,
+							"id": "SETID"
+						}
+					]
+				}
+			]
 		}
 	},
-	"log": {
-		"access": "",
-		"loglevel": "info",
-		"error": ""
-	},
-	"outboundDetour": [{
+	"outboundDetour": [
+		{
 			"tag": "direct",
 			"protocol": "freedom",
 			"settings": {
@@ -473,44 +512,33 @@ user_config_add(){
 			}
 		}
 	],
-	"inbound": {
-		"streamSettings": null,
-		"settings": {
-			"ip": "127.0.0.1",
-			"udp": true,
-			"clients": null,
-			"auth": "noauth"
-		},
-		"protocol": "socks",
-		"domainOverride": ["tls","http"],
-		"port": 1080,
-		"listen": "0.0.0.0"
-	},
-	"inboundDetour": null,
 	"routing": {
+		"strategy": "rules",
 		"settings": {
-			"rules": [{
-					"ip": [
-						"0.0.0.0/8",
-						"10.0.0.0/8",
-						"100.64.0.0/10",
-						"127.0.0.0/8",
-						"169.254.0.0/16",
-						"172.16.0.0/12",
-						"192.0.0.0/24",
-						"192.0.2.0/24",
-						"192.168.0.0/16",
-						"198.18.0.0/15",
-						"198.51.100.0/24",
-						"203.0.113.0/24",
-						"::1/128",
-						"fc00::/7",
-						"fe80::/10"
-					],
-					"domain": null,
+			"domainStrategy": "IPIfNonMatch",
+			"rules": [
+				{
 					"type": "field",
-					"port": null,
-					"outboundTag": "direct"
+					"outboundTag": "agentout",
+					"ip": [
+						"8.8.8.8",
+						"1.1.1.1"
+					]
+				},
+				{
+					"type": "field",
+					"outboundTag": "direct",
+					"ip": [
+						"119.29.29.29",
+						"114.114.114.114"
+					]
+				},
+				{
+					"type": "field",
+					"outboundTag": "direct",
+					"ip": [
+						"geoip:private"
+					]
 				},
 				{
 					"type": "chinasites",
@@ -519,18 +547,23 @@ user_config_add(){
 				{
 					"type": "chinaip",
 					"outboundTag": "direct"
+				},
+				{
+					"type": "field",
+					"outboundTag": "direct",
+					"domain": [
+						"geosite:cn"
+					]
+				},
+				{
+					"type": "field",
+					"outboundTag": "direct",
+					"ip": [
+						"geoip:cn"
+					]
 				}
-			],
-			"domainStrategy": "IPIfNonMatch"
-		},
-		"strategy": "rules"
-	},
-	"dns": {
-		"servers": [
-			"8.8.8.8",
-			"1.1.1.1",
-			"119.29.29.29"
-		]
+			]
+		}
 	}
 }
 EOF
@@ -562,7 +595,7 @@ modify_nginx(){
 	sed -i "/proxy_pass/c \\\tproxy_pass http://127.0.0.1:${PORT};" ${nginx_conf}
 	sed -i "s/PathHeader/${hostheader}/g" "${nginx_conf}"
 	sed -i "s/SETPORT80/listen 80/g" "${nginx_conf}"
-	sed -i "s/SETREWRITE/rewrite ^ https:\/\/${domain}:${port}\$request_uri? permanent/g" "${nginx_conf}"
+	sed -i "s/SETREWRITE/return 301 https:\/\/\$host\/\$request_uri/g" "${nginx_conf}"
 }
 
 #修正客户端json配置文件
