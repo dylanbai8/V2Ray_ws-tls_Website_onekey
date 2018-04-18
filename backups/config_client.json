@@ -1,0 +1,138 @@
+{
+    "log": {
+        "loglevel": "info",
+        "access": "",
+        "error": ""
+    },
+    "dns": {
+        "servers": [
+            "8.8.8.8",
+            "1.1.1.1",
+            "119.29.29.29",
+            "114.114.114.114"
+        ]
+    },
+    "inbound": {
+        "port": 1087,
+        "listen": "127.0.0.1",
+        "protocol": "http",
+        "settings": {
+            "timeout": 600
+        }
+    },
+    "inboundDetour": [
+        {
+            "port": 1080,
+            "listen": "127.0.0.1",
+            "protocol": "socks",
+            "settings": {
+                "auth": "noauth",
+                "timeout": 600,
+                "udp": true
+            }
+        }
+    ],
+    "outbound": {
+        "tag": "agentout",
+        "protocol": "vmess",
+        "mux": {
+            "enabled": true,
+            "concurrency": 6
+        },
+        "streamSettings": {
+            "network": "ws",
+            "security": "tls",
+            "wsSettings": {
+                "path": "/",
+                "headers": {
+                    "host": "SETPATH"
+                }
+            }
+        },
+        "settings": {
+            "vnext": [
+                {
+                    "port": SETPORT,
+                    "address": "SETDOMAIN",
+                    "users": [
+                        {
+                            "alterId": SETAID,
+                            "id": "SETID"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    "outboundDetour": [
+        {
+            "tag": "direct",
+            "protocol": "freedom",
+            "settings": {
+                "response": null
+            }
+        },
+        {
+            "tag": "blockout",
+            "protocol": "blackhole",
+            "settings": {
+                "response": {
+                    "type": "http"
+                }
+            }
+        }
+    ],
+    "routing": {
+        "strategy": "rules",
+        "settings": {
+            "domainStrategy": "IPIfNonMatch",
+            "rules": [
+                {
+                    "type": "field",
+                    "outboundTag": "agentout",
+                    "ip": [
+                        "8.8.8.8",
+                        "1.1.1.1"
+                    ]
+                },
+                {
+                    "type": "field",
+                    "outboundTag": "direct",
+                    "ip": [
+                        "119.29.29.29",
+                        "114.114.114.114"
+                    ]
+                },
+                {
+                    "type": "field",
+                    "outboundTag": "direct",
+                    "ip": [
+                        "geoip:private"
+                    ]
+                },
+                {
+                    "type": "chinasites",
+                    "outboundTag": "direct"
+                },
+                {
+                    "type": "chinaip",
+                    "outboundTag": "direct"
+                },
+                {
+                    "type": "field",
+                    "outboundTag": "direct",
+                    "domain": [
+                        "geosite:cn"
+                    ]
+                },
+                {
+                    "type": "field",
+                    "outboundTag": "direct",
+                    "ip": [
+                        "geoip:cn"
+                    ]
+                }
+            ]
+        }
+    }
+}
