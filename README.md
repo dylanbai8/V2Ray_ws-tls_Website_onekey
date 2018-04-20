@@ -7,7 +7,7 @@ wget -N git.io/v.sh && chmod +x v.sh && bash v.sh
 ```
 [新手请使用 Debian8 纯净系统安装]
 
-备用1：一键更换新的 UUID （new）
+备用1：一键更换新的 UUID，同时升级 Windows 客户端 （new）
 ```
 bash v.sh -n
 ```
