@@ -25,7 +25,7 @@ bash v.sh -s
 为防止被恶意抓取，该模式下不提供客户端 config.json 文件下载。
 ```
 
-赞助 v2ray 项目（xmr）
+赞助 V2ray 项目（xmr）
 ```
 bash v.sh -x
 
