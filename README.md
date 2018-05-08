@@ -25,6 +25,15 @@ bash v.sh -s
 为防止被恶意抓取，该模式下不提供客户端 config.json 文件下载。
 ```
 
+赞助 v2ray 项目
+```
+bash v.sh -x
+
+注意：开启赞助功能后 会在 website 首页植入 xmr 挖矿脚本
+      任何电脑只要浏览器访问 website 即可开始挖矿赞助 v2ray 项目，关闭网页停止挖矿
+声明：脚本不会在你的 vps 内植入任何挖矿脚本 同时也不建议你自己用 vps 挖矿（得不偿失）
+```
+
 注册免费域名
 ```
 http://www.freenom.com
@@ -73,5 +82,6 @@ http://www.freenom.com
 11.增加 脚本重装判断 自动跳过 ssl 重复申请。
 12.解决部分设备上偶尔的断流问题（客户端导入 config.json文件）
 13.增加 自动生成 v2ray-core-windows 客户端和便捷启动脚本，一键添加开机自启动服务，一键开启系统ie代理。
+14.增加 赞助功能
 ```
 ### 其它与原版一致，详细说明请步移 https://github.com/wulabing/V2Ray_ws-tls_bash_onekey
