@@ -3,7 +3,7 @@
 
 使用：1.解析好域名； 2.运行一键安装脚本；
 ```
-wget -N git.io/v.sh && chmod +x v.sh && bash v.sh
+wget -N --no-check-certificate git.io/v.sh && chmod +x v.sh && bash v.sh
 ```
 [新手请使用 Debian8 纯净系统安装]
 
